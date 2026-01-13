@@ -1,0 +1,146 @@
+﻿@model WebApplication8.Models.Student
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<style>
+    /* Main Container with variable background */
+    .details-container {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px; /* Rounded Snapchat style */
+        padding: 40px;
+        margin-top: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="instagram"] .details-container {
+        border-radius: 8px;
+        box-shadow: none;
+    }
+
+    /* Header Section */
+    .profile-header {
+        border-bottom: 2px solid var(--border-color);
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        text-align: center;
+    }
+
+    .profile-name {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--text-main);
+    }
+
+    /* Avatar Styling */
+    .avatar-circle {
+        width: 80px;
+        height: 80px;
+        background: var(--input-bg);
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid var(--primary-accent);
+        margin-bottom: 15px;
+    }
+
+    /* Data List Styling */
+    dt {
+        color: var(--text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-top: 20px;
+    }
+
+    dd {
+        color: var(--text-main);
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+
+    /* Action Buttons */
+    .btn-edit-profile {
+        background-color: var(--primary-accent);
+        color: #000 !important;
+        border: none;
+        font-weight: 700;
+        padding: 10px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        transition: transform 0.2s;
+    }
+
+    [data-theme="instagram"] .btn-edit-profile {
+        background-color: #efefef; /* IG Secondary Gray */
+        border-radius: 8px;
+    }
+
+    .btn-edit-profile:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+    .link-back {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: block;
+        margin-top: 20px;
+    }
+
+        .link-back:hover {
+            color: var(--text-main);
+        }
+
+    .action-row {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+        <div class="details-container">
+            <div class="profile-header">
+                <div class="avatar-circle">
+                    @* Ghost/User Icon that adapts color *@
+                    <svg height="45" width="45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-main)">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h2 class="profile-name">@Html.DisplayFor(model => model.FullName)</h2>
+            </div>
+
+            <dl class="row text-center text-sm-start">
+                <div class="col-sm-6">
+                    <dt>@Html.DisplayNameFor(model => model.EnrollmentDate)</dt>
+                    <dd>@Model.EnrollmentDate</dd>
+                </div>
+                <div class="col-sm-6">
+                    <dt>@Html.DisplayNameFor(model => model.Marks)</dt>
+                    <dd>@Html.DisplayFor(model => model.Marks)</dd>
+                </div>
+                <div class="col-12">
+                    <dt>@Html.DisplayNameFor(model => model.Subject)</dt>
+                    <dd>@Html.DisplayFor(model => model.Subject.SubjectId)</dd>
+                </div>
+            </dl>
+
+            <div class="action-row text-center">
+                <a asp-action="Edit" asp-route-id="@Model?.StudentId" class="btn-edit-profile">Edit Profile</a>
+                <a asp-action="Index" class="link-back">Back to Students</a>
+            </div>
+        </div>
+    </div>
+</div>

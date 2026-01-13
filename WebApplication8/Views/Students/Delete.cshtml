@@ -1,0 +1,144 @@
+﻿@model WebApplication8.Models.Student
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<style>
+    /* Main Delete Card */
+    .delete-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 40px;
+        margin-top: 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    }
+
+    [data-theme="instagram"] .delete-card {
+        border-radius: 8px;
+        box-shadow: none;
+    }
+
+    h1 {
+        color: var(--danger-color);
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    h3 {
+        color: var(--text-main);
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 30px;
+    }
+
+    /* Data Display List */
+    .info-list {
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        max-width: 350px;
+        margin: 0 auto 30px auto;
+        padding: 20px;
+        background-color: var(--input-bg);
+        border-radius: 15px;
+    }
+
+    dt {
+        color: var(--text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    dd {
+        color: var(--text-main);
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 5px;
+    }
+
+    /* Action Buttons */
+    .btn-delete-final {
+        background-color: var(--danger-color);
+        color: #fff !important;
+        border: none;
+        font-weight: 800;
+        width: 100%;
+        padding: 14px;
+        border-radius: 50px;
+        text-transform: uppercase;
+        transition: transform 0.2s;
+    }
+
+    [data-theme="instagram"] .btn-delete-final {
+        background-color: transparent;
+        border: 1px solid var(--danger-color);
+        color: var(--danger-color) !important;
+        border-radius: 8px;
+        text-transform: none;
+    }
+
+    .btn-delete-final:hover {
+        transform: scale(1.02);
+        background-color: var(--danger-color);
+        color: #fff !important;
+    }
+
+    .btn-cancel {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 700;
+        display: block;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+        .btn-cancel:hover {
+            color: var(--text-main);
+        }
+
+    .warning-icon {
+        margin-bottom: 20px;
+        color: var(--danger-color);
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="delete-card">
+            <div class="warning-icon">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+
+            <h1>Delete?</h1>
+            <h3>This action cannot be undone.</h3>
+
+            <dl class="info-list">
+                <dt>@Html.DisplayNameFor(model => model.FullName)</dt>
+                <dd>@Html.DisplayFor(model => model.FullName)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Subject)</dt>
+                <dd>@Html.DisplayFor(model => model.Subject.SubjectId)</dd>
+
+                <dt>@Html.DisplayNameFor(model => model.Marks)</dt>
+                <dd>@Html.DisplayFor(model => model.Marks)</dd>
+            </dl>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="StudentId" />
+                <button type="submit" class="btn-delete-final">Delete Student</button>
+                <a asp-action="Index" class="btn-cancel">Cancel and Go Back</a>
+            </form>
+        </div>
+    </div>
+</div>

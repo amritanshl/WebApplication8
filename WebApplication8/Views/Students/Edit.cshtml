@@ -1,0 +1,153 @@
+﻿@model WebApplication8.Models.Student
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<style>
+    /* Main Card */
+    .edit-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 40px;
+        margin-top: 30px;
+        transition: all 0.3s ease;
+    }
+
+    [data-theme="instagram"] .edit-card {
+        border-radius: 8px;
+    }
+
+    h1 {
+        color: var(--text-main);
+        font-weight: 800;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .subtitle {
+        color: var(--text-muted);
+        text-align: center;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    /* Input Styling using Variables */
+    .form-label {
+        color: var(--text-muted);
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .form-control {
+        background-color: var(--input-bg) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-main) !important;
+        border-radius: 12px !important;
+        padding: 12px 15px !important;
+        font-size: 15px;
+        transition: border-color 0.2s;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-accent) !important;
+            box-shadow: none !important;
+        }
+
+    /* Primary Action Button */
+    .btn-save-changes {
+        background-color: var(--primary-accent);
+        color: #000 !important;
+        border: none;
+        font-weight: 800;
+        width: 100%;
+        padding: 12px;
+        border-radius: 50px;
+        margin-top: 20px;
+        transition: transform 0.2s, opacity 0.2s;
+    }
+
+    [data-theme="instagram"] .btn-save-changes {
+        color: #fff !important;
+        border-radius: 8px;
+    }
+
+    .btn-save-changes:hover {
+        transform: scale(1.02);
+        opacity: 0.9;
+    }
+
+    /* Cancel Link */
+    .cancel-link {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-size: 14px;
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+        font-weight: 600;
+    }
+
+        .cancel-link:hover {
+            color: var(--text-main);
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+        <div class="edit-card">
+            <h1>Edit</h1>
+            <p class="subtitle">Update student information</p>
+
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+                <input type="hidden" asp-for="StudentId" />
+
+                <div class="form-group">
+                    <label asp-for="FullName" class="form-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" placeholder="Student Name" />
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SubjectId" class="form-label">Subject</label>
+                    <select asp-for="SubjectId" class="form-control" asp-items="ViewBag.SubjectId"></select>
+                    <span asp-validation-for="SubjectId" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EnrollmentDate" class="form-label">Enrollment Date</label>
+                    <input asp-for="EnrollmentDate" class="form-control" type="date" />
+                    <span asp-validation-for="EnrollmentDate" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Marks" class="form-label">Current Marks</label>
+                    <input asp-for="Marks" class="form-control" />
+                    <span asp-validation-for="Marks" class="text-danger small"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn-save-changes">Save Changes</button>
+                </div>
+            </form>
+
+            <a asp-action="Index" class="cancel-link">Cancel</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

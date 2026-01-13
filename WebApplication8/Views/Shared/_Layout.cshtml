@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Student Portal</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <style>
+        :root {
+            /* Instagram Dark Variables */
+            --bg-color: #000000;
+            --card-bg: #000000;
+            --text-main: #f5f5f5;
+            --text-muted: #8e8e8e;
+            --border-color: #262626;
+            --primary-accent: #0095f6;
+            --danger-color: #ed4956;
+            --input-bg: #121212;
+        }
+
+        [data-theme="snapchat"] {
+            /* Snapchat Light Variables */
+            --bg-color: #f2f2f2;
+            --card-bg: #ffffff;
+            --text-main: #000000;
+            --text-muted: #666666;
+            --border-color: #e8e8e8;
+            --primary-accent: #FFFC00;
+            --danger-color: #ff0000;
+            --input-bg: #f7f7f7;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            transition: background 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--card-bg) !important;
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .theme-toggler {
+            background: var(--primary-accent);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body data-theme="instagram">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm mb-3">
+            <div class="container-fluid" style="max-width: 935px;">
+                <a class="navbar-brand fw-bold" style="color: var(--text-main)" asp-controller="Home" asp-action="Index">StudentPortal</a>
+                <button class="theme-toggler" onclick="toggleTheme()">Switch Theme</button>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container" style="max-width: 935px;">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted" style="border-color: var(--border-color) !important;">
+        <div class="container text-center">
+            &copy; 2026 - StudentPortal
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'instagram' ? 'snapchat' : 'instagram';
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'instagram';
+            document.body.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
