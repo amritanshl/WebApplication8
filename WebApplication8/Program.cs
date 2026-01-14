@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Sqlite;
+
 using WebApplication8.Models;
 
 namespace WebApplication8
@@ -8,13 +10,23 @@ namespace WebApplication8
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<Amrit01132026Context>(o=>o.UseSqlServer("Server=Amrit\\sqlexpress;Database=amrit01132026;Trusted_Connection=True;TrustServerCertificate=True;"));
+            // 1. Get the connection string from appsettings.json
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+
+            });
+                builder.Services.AddDbContext<WebApplication8.Models.Amrit01132026Context>(options =>
+                options.UseSqlServer("Server=Amrit\\sqlexpress;Database=amrit01132026;Trusted_Connection=True;TrustServerCertificate=True;"));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
-
+            app.UseSession();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -25,6 +37,7 @@ namespace WebApplication8
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+      
 
             app.UseRouting();
 
@@ -32,7 +45,7 @@ namespace WebApplication8
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Students}/{action=Index}/{id?}");
+                pattern: "{controller=Account}/{action=Login}/{id?}");
 
             app.Run();
         }

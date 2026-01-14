@@ -9,7 +9,7 @@ using WebApplication8.Models;
 
 namespace WebApplication8.Controllers
 {
-    public class SubjectsController : Controller
+    public class SubjectsController : BaseController
     {
         private readonly Amrit01132026Context _context;
 

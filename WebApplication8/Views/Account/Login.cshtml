@@ -1,0 +1,398 @@
+﻿@model WebApplication8.Models.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #000;
+            color: #E1E9EE;
+            font-family: system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* --- BACKGROUND DOODLES LAYER --- */
+        #background-doodles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Behind everything */
+            overflow: hidden;
+            pointer-events: none;
+            /* CHANGED: Increased opacity for brightness */
+            opacity: 0.7;
+        }
+
+        .bg-doodle {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            fill: none;
+            /* CHANGED: Stroke is now White instead of Dark Grey */
+            stroke: #FFFFFF;
+            stroke-width: 1.5;
+            filter: drop-shadow(0 0 2px rgba(255,255,255,0.3)); /* Subtle glow */
+        }
+
+            /* Background Eye Animations */
+            .bg-doodle .eye-group {
+                transition: transform 0.2s ease;
+                transform-origin: center;
+            }
+
+        /* When password is focused, background eyes squint/close */
+        body.eyes-closed .bg-doodle .eye-group {
+            transform: scaleY(0.1); /* Squish eyes shut */
+        }
+
+        /* --- MAIN CONTENT LAYER --- */
+        .split-container {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            max-width: 1000px;
+            width: 90%;
+            position: relative;
+            z-index: 10; /* Above background */
+        }
+
+        /* Left Side: Main Characters */
+        .doodle-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* Right Side: Login Form */
+        .login-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-card {
+            background-color: #1D2226;
+            border-radius: 8px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #38434F;
+            /* Strong shadow to separate form from the bright background doodles */
+            box-shadow: 0 0 60px rgba(0,0,0,1);
+        }
+
+        /* Form Styling */
+        .btn-primary {
+            background-color: #0A66C2;
+            border: none;
+            border-radius: 24px;
+            font-weight: 600;
+        }
+
+            .btn-primary:hover {
+                background-color: #084e96;
+            }
+
+        .form-control {
+            background-color: #12171B;
+            border: 1px solid #38434F;
+            color: white;
+        }
+
+            .form-control:focus {
+                background-color: #12171B;
+                color: white;
+                border-color: #0A66C2;
+                box-shadow: 0 0 0 0.25rem rgba(10, 102, 194, 0.25);
+            }
+
+        /* --- Main Character Doodle Styling --- */
+        .doodle {
+            width: 120px;
+            height: 140px;
+            position: relative;
+        }
+
+            .doodle svg {
+                width: 100%;
+                height: 100%;
+                overflow: visible;
+                filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.5));
+            }
+
+        .doodle-yellow path.body {
+            fill: #FFFC00;
+            stroke: #E6E300;
+        }
+
+        .doodle-blue path.body {
+            fill: #0A66C2;
+            stroke: #004182;
+        }
+
+        .doodle-red path.body {
+            fill: #FF4433;
+            stroke: #CC0000;
+        }
+
+        path.body {
+            stroke-width: 3;
+            stroke-linejoin: round;
+        }
+
+        /* Shared Eye Styles */
+        .eye-ball {
+            fill: white;
+            stroke: none;
+        }
+
+        .eye-pupil {
+            fill: #1D2226;
+            transition: transform 0.05s linear;
+        }
+
+        /* CHANGED: Background pupils are now brighter */
+        .bg-doodle .eye-pupil {
+            fill: #FFFFFF;
+        }
+
+        /* Arm Animation */
+        .arm-group {
+            transform-origin: 50% 70%;
+            transition: transform 0.1s ease-out;
+        }
+
+        .hand-color {
+            stroke: rgba(0,0,0,0.2);
+            stroke-width: 1;
+        }
+
+        /* Covering Eyes State (Main Characters) */
+        .doodle-section.covering .arm-group.left-arm {
+            transform: translate(15px, -45px) rotate(140deg) !important;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .doodle-section.covering .arm-group.right-arm {
+            transform: translate(-15px, -45px) rotate(-140deg) !important;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .doodle-section.covering .eye-pupil {
+            transform: translate(0,0) !important;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="background-doodles"></div>
+
+    <div class="split-container">
+
+        <div class="doodle-section" id="doodleArea">
+
+            <div class="doodle doodle-yellow">
+                <svg viewBox="0 0 100 120">
+                    <path class="body" d="M10,120 Q10,20 50,20 Q90,20 90,120" />
+                    <g class="eyes">
+                        <circle class="eye-ball" cx="35" cy="50" r="10" />
+                        <circle class="eye-pupil js-pupil" cx="35" cy="50" r="4" />
+                        <circle class="eye-ball" cx="65" cy="50" r="10" />
+                        <circle class="eye-pupil js-pupil" cx="65" cy="50" r="4" />
+                    </g>
+                    <g class="arm-group left-arm js-arm" style="transform-origin: 20px 80px;">
+                        <rect x="10" y="80" width="20" height="40" rx="10" fill="#FFFC00" class="hand-color" />
+                        <circle cx="20" cy="115" r="12" fill="#FFFC00" class="hand-color" />
+                    </g>
+                    <g class="arm-group right-arm js-arm" style="transform-origin: 80px 80px;">
+                        <rect x="70" y="80" width="20" height="40" rx="10" fill="#FFFC00" class="hand-color" />
+                        <circle cx="80" cy="115" r="12" fill="#FFFC00" class="hand-color" />
+                    </g>
+                </svg>
+            </div>
+
+            <div class="doodle doodle-blue">
+                <svg viewBox="0 0 100 120">
+                    <path class="body" d="M15,120 C15,10 85,10 85,120" />
+                    <g class="eyes">
+                        <circle class="eye-ball" cx="35" cy="45" r="10" />
+                        <circle class="eye-pupil js-pupil" cx="35" cy="45" r="4" />
+                        <circle class="eye-ball" cx="65" cy="45" r="10" />
+                        <circle class="eye-pupil js-pupil" cx="65" cy="45" r="4" />
+                    </g>
+                    <g class="arm-group left-arm js-arm" style="transform-origin: 20px 80px;">
+                        <rect x="10" y="80" width="20" height="40" rx="10" fill="#0A66C2" class="hand-color" />
+                        <circle cx="20" cy="115" r="12" fill="#0A66C2" class="hand-color" />
+                    </g>
+                    <g class="arm-group right-arm js-arm" style="transform-origin: 80px 80px;">
+                        <rect x="70" y="80" width="20" height="40" rx="10" fill="#0A66C2" class="hand-color" />
+                        <circle cx="80" cy="115" r="12" fill="#0A66C2" class="hand-color" />
+                    </g>
+                </svg>
+            </div>
+
+            <div class="doodle doodle-red">
+                <svg viewBox="0 0 100 120">
+                    <path class="body" d="M20,120 Q50,0 80,120" />
+                    <g class="eyes">
+                        <circle class="eye-ball" cx="40" cy="55" r="10" />
+                        <circle class="eye-pupil js-pupil" cx="40" cy="55" r="4" />
+                        <circle class="eye-ball" cx="60" cy="55" r="10" />
+                        <circle class="eye-pupil js-pupil" cx="60" cy="55" r="4" />
+                    </g>
+                    <g class="arm-group left-arm js-arm" style="transform-origin: 30px 90px;">
+                        <rect x="20" y="90" width="20" height="40" rx="10" fill="#FF4433" class="hand-color" />
+                        <circle cx="30" cy="125" r="12" fill="#FF4433" class="hand-color" />
+                    </g>
+                    <g class="arm-group right-arm js-arm" style="transform-origin: 70px 90px;">
+                        <rect x="60" y="90" width="20" height="40" rx="10" fill="#FF4433" class="hand-color" />
+                        <circle cx="70" cy="125" r="12" fill="#FF4433" class="hand-color" />
+                    </g>
+                </svg>
+            </div>
+
+        </div>
+
+        <div class="login-section">
+            <div class="login-card">
+                <div class="text-center mb-4">
+                    <h2 style="font-weight: 700;">Sign in</h2>
+                    <p style="color: #9199A1;">Welcome back to Corp Directory</p>
+                </div>
+                <form asp-action="Login" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                    <div class="mb-3">
+                        <input asp-for="Email" class="form-control form-control-lg" placeholder="Email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <input asp-for="Password" id="passwordField" class="form-control form-control-lg" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-2">Sign in</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const passwordField = document.getElementById('passwordField');
+            const doodleArea = document.getElementById('doodleArea');
+            const bgContainer = document.getElementById('background-doodles');
+
+            // --- 1. GENERATE BACKGROUND DOODLES ---
+            const density = 35;
+            for(let i=0; i<density; i++) {
+                const svgNS = "http://www.w3.org/2000/svg";
+                const div = document.createElement('div');
+                div.className = 'bg-doodle';
+
+                div.style.left = Math.random() * 100 + 'vw';
+                div.style.top = Math.random() * 100 + 'vh';
+                const scale = 0.5 + Math.random();
+                div.style.transform = `scale(${scale})`;
+
+                // Create SVG Eye
+                const svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("viewBox", "0 0 50 50");
+
+                const g = document.createElementNS(svgNS, "g");
+                g.setAttribute("class", "eye-group");
+
+                // Eye shape
+                const eyeBall = document.createElementNS(svgNS, "circle");
+                eyeBall.setAttribute("cx", "25");
+                eyeBall.setAttribute("cy", "25");
+                eyeBall.setAttribute("r", "15");
+                eyeBall.setAttribute("fill", "#000"); // Dark fill for contrast
+                // Note: Stroke color is handled by CSS (.bg-doodle) for brightness
+
+                // Pupil
+                const pupil = document.createElementNS(svgNS, "circle");
+                pupil.setAttribute("class", "eye-pupil js-pupil");
+                pupil.setAttribute("cx", "25");
+                pupil.setAttribute("cy", "25");
+                pupil.setAttribute("r", "5");
+                // Note: Fill color is handled by CSS
+
+                g.appendChild(eyeBall);
+                g.appendChild(pupil);
+                svg.appendChild(g);
+                div.appendChild(svg);
+                bgContainer.appendChild(div);
+            }
+
+            // --- 2. SELECT & TRACK ---
+            const allPupils = document.querySelectorAll('.js-pupil');
+            const arms = document.querySelectorAll('.js-arm');
+            const eyeMoveMax = 5;
+            const armMoveMax = 15;
+
+            window.addEventListener('mousemove', (e) => {
+                if (document.activeElement === passwordField) return;
+
+                allPupils.forEach(pupil => {
+                    const rect = pupil.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+
+                    const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+                    const distance = pupil.closest('.bg-doodle') ? 3 : eyeMoveMax;
+
+                    const x = Math.cos(angle) * distance;
+                    const y = Math.sin(angle) * distance;
+
+                    pupil.style.transform = `translate(${x}px, ${y}px)`;
+                });
+
+                arms.forEach(arm => {
+                    const rect = arm.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const distX = (e.clientX - centerX) / window.innerWidth;
+                    const distY = (e.clientY - centerY) / window.innerHeight;
+
+                    const moveX = distX * armMoveMax;
+                    const moveY = distY * armMoveMax;
+                    const rotate = distX * 20;
+
+                    arm.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotate}deg)`;
+                });
+            });
+
+            // --- 3. PASSWORD INTERACTION ---
+            passwordField.addEventListener('focus', () => {
+                doodleArea.classList.add('covering');
+                document.body.classList.add('eyes-closed');
+            });
+
+            passwordField.addEventListener('blur', () => {
+                doodleArea.classList.remove('covering');
+                document.body.classList.remove('eyes-closed');
+
+                arms.forEach(arm => {
+                    arm.style.transform = 'translate(0,0) rotate(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
