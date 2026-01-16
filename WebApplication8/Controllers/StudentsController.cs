@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,8 @@ using WebApplication8.Models;
 
 namespace WebApplication8.Controllers
 {
-    public class StudentsController : BaseController
+    [Authorize]
+    public class StudentsController : Controller
     {
         private readonly Amrit01132026Context _context;
 
@@ -18,7 +20,8 @@ namespace WebApplication8.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Policy = "ReadAccess")]
+      //  [Authorize(Policy = "AdminOnly")]
         // GET: Students
         public async Task<IActionResult> Index(string sortOrder)
         {
@@ -61,7 +64,10 @@ namespace WebApplication8.Controllers
             return View(await students.AsNoTracking().ToListAsync());
         }
 
+
         // GET: Students/Details/5
+        [Authorize(Policy = "ReadAccess")]
+       // [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -80,6 +86,8 @@ namespace WebApplication8.Controllers
             return View(student);
         }
 
+        //[Authorize(Policy = "ReadAccess")]
+        [Authorize(Policy = "AdminOnly")]
         // GET: Students/Create
         public IActionResult Create()
         {
@@ -90,6 +98,8 @@ namespace WebApplication8.Controllers
         // POST: Students/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[Authorize(Policy = "ReadAccess")]
+        [Authorize(Policy = "AdminOnly")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FullName,SubjectId,EnrollmentDate,Marks")] Student student)
@@ -103,6 +113,8 @@ namespace WebApplication8.Controllers
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectId", student.SubjectId);
             return View(student);
         }
+        //[Authorize(Policy = "ReadAccess")]
+        [Authorize(Policy = "AdminOnly")]
 
         // GET: Students/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -120,7 +132,8 @@ namespace WebApplication8.Controllers
             ViewData["SubjectId"] = new SelectList(_context.Subjects, "SubjectId", "SubjectId", student.SubjectId);
             return View(student);
         }
-
+        //[Authorize(Policy = "ReadAccess")]
+        [Authorize(Policy = "AdminOnly")]
         // POST: Students/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -158,6 +171,8 @@ namespace WebApplication8.Controllers
         }
 
         // GET: Students/Delete/5
+        //[Authorize(Policy = "ReadAccess")]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -175,7 +190,8 @@ namespace WebApplication8.Controllers
 
             return View(student);
         }
-
+        //[Authorize(Policy = "ReadAccess")]
+        [Authorize(Policy = "AdminOnly")]
         // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
